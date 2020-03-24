@@ -1,46 +1,50 @@
-// Assign the data from `data.js` to a descriptive variable
-var people = data;
+// from data.js
+var tableData = data;
 
-// Select the button
-var button = d3.select("#button");
+ //Get a reference to the table body
+ var ufoTable = d3.select("#ufo-table");
 
-button.on("click", function() {
+ //Use d3 to append 1 cell per value
+  data.forEach(function(ufoSighting) {
+    var row = ufoTable.append("tr");
+ 
+    Object.entries(ufoSighting).forEach(function([key, value]) {
+      var cell = row.append("td");
+    });
+  });
+ 
+ //Use d3 to update each cell's text with  values
+  data.forEach(function(ufoSighting) {
+    var row = ufoTable.append("tr");
+    Object.entries(ufoSighting).forEach(function([key, value]) {
+      var cell = row.append("td");
+      cell.text(value);
+    });
+  });
+ 
 
-  // Select the input element and get the raw HTML node
-  var inputElement = d3.select("#patient-form-input");
+//Use a date form in your HTML document and write JavaScript code that will listen for events 
+//and search through the date/time column to find rows that match user input
 
-  // Get the value property of the input element
-  var inputValue = inputElement.property("value");
 
-  console.log(inputValue);
-  console.log(people);
+  function myFunction() {
+    var input, filter, table, tr, td, i, txtValue;
+    input = document.getElementById("datetime");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("ufo-table");
+    tr = table.getElementsByTagName("tr");
 
-  var filteredData = people.filter(person => person.bloodType === inputValue);
-
-  console.log(filteredData);
-
-  // BONUS: Calculate summary statistics for the age field of the filtered data
-
-  // First, create an array with just the age values
-  var ages = filteredData.map(person => person.age);
-
-  // Next, use math.js to calculate the mean, median, mode, var, and std of the ages
-  var mean = math.mean(ages);
-  var median = math.median(ages);
-  var mode = math.mode(ages);
-  var variance = math.var(ages);
-  var standardDeviation = math.std(ages);
-
-  // Then, select the unordered list element by class name
-  var list = d3.select(".summary");
-
-  // remove any children from the list to
-  list.html("");
-
-  // append stats to the list
-  list.append("li").text(`Mean: ${mean}`);
-  list.append("li").text(`Median: ${median}`);
-  list.append("li").text(`Mode: ${mode}`);
-  list.append("li").text(`Variance: ${variance}`);
-  list.append("li").text(`Standard Deviation: ${standardDeviation}`);
-});
+ // Loop through all sightings and hide those who don't match the search date
+    for (i = 0; i < tr.length; i++) {
+      td = tr[i].getElementsByTagName("td")[0];
+      if (td) {
+        txtValue = td.textContent || td.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
+      }       
+    }
+  }
+  
